@@ -66,7 +66,7 @@ struct StudentDashboard: View {
         Task {
             do {
                 let fetchedCourses: [Course] = try await apiService.request("/courses", method: "GET")
-                let fetchedAttendances: [Attendance] = try await apiService.request("/attendances/users/\(user.id)", method: "GET")
+                let fetchedAttendances: [Attendance] = try await apiService.request("/users/\(user.id)/attendances", method: "GET")
                 DispatchQueue.main.async {
                     self.courses = fetchedCourses
                     self.attendances = fetchedAttendances
