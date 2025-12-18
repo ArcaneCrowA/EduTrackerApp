@@ -26,6 +26,13 @@ struct AdminDashboard: View {
             attendanceView.tabItem { Label("Attendance", systemImage: "calendar.badge.clock") }.tag(2)
         }
         .onAppear(perform: fetchData)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Logout", role: .destructive) {
+                    apiService.logout()
+                }
+            }
+        }
     }
     
     var usersList: some View {

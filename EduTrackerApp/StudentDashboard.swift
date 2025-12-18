@@ -11,6 +11,13 @@ struct StudentDashboard: View {
             myAttendance.tabItem { Label("My Attendance", systemImage: "checklist") }
         }
         .onAppear(perform: fetchData)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Logout", role: .destructive) {
+                    apiService.logout()
+                }
+            }
+        }
     }
     
     var availableCourses: some View {

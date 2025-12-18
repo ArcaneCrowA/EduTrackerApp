@@ -6,12 +6,17 @@ class APIService: ObservableObject {
     static let shared = APIService()
     
     private let baseURL = "http://localhost:8080/api/v1"
-    @Published var token: String? = nil
+    @Published var token: String? = UserDefaults.standard.string(forKey: "authToken")
     @Published var currentUser: User? = nil
     
-    private init() {}
+    private init() {
+        if let savedToken = token {
+            initSession(token: savedToken)
+        }
+    }
     
     func setToken(_ token: String) {
+        UserDefaults.standard.set(token, forKey: "authToken")
         self.initSession(token: token)
     }
     
@@ -39,6 +44,7 @@ class APIService: ObservableObject {
         DispatchQueue.main.async {
             self.token = nil
             self.currentUser = nil
+            UserDefaults.standard.removeObject(forKey: "authToken")
         }
     }
     

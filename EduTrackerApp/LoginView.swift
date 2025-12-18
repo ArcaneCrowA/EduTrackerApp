@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var login = ""
-    @State private var password = ""
+    @State private var login = UserDefaults.standard.string(forKey: "savedLogin") ?? ""
+    @State private var password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
+    @State private var rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
     @State private var errorMessage = ""
     @State private var isLoading = false
     
@@ -28,6 +29,9 @@ struct LoginView: View {
                 SecureField("Password", text: $password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
+            
+            Toggle("Remember Me", isOn: $rememberMe)
+                .padding(.vertical, 8)
             
             if !errorMessage.isEmpty {
                 Text(errorMessage)
@@ -64,6 +68,15 @@ struct LoginView: View {
                 let body = ["login": login, "password": password]
                 let response: AuthResponse = try await apiService.request("/public/login", method: "POST", body: body)
                 DispatchQueue.main.async {
+                    if rememberMe {
+                        UserDefaults.standard.set(login, forKey: "savedLogin")
+                        UserDefaults.standard.set(password, forKey: "savedPassword")
+                        UserDefaults.standard.set(true, forKey: "rememberMe")
+                    } else {
+                        UserDefaults.standard.removeObject(forKey: "savedLogin")
+                        UserDefaults.standard.removeObject(forKey: "savedPassword")
+                        UserDefaults.standard.set(false, forKey: "rememberMe")
+                    }
                     apiService.setToken(response.token)
                     isLoading = false
                 }
