@@ -7,7 +7,7 @@ struct StudentDashboard: View {
     
     var body: some View {
         TabView {
-            availableCourses.tabItem { Label("Enrollment", systemImage: "book.fill") }
+            availableCourses.tabItem { Label("Courses", systemImage: "book.fill") }
             myAttendance.tabItem { Label("My Attendance", systemImage: "checklist") }
         }
         .onAppear(perform: fetchData)
@@ -37,9 +37,18 @@ struct StudentDashboard: View {
             Text("My Attendance History").font(.headline).padding()
             List(attendances) { attendance in
                 HStack {
-                    Text("Course ID: \(attendance.courseId)")
+                    VStack(alignment: .leading) {
+                        Text(attendance.course?.title ?? "Course ID: \(attendance.courseId)")
+                            .font(.headline)
+                        Text(formatDate(attendance.startDate))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                     Spacer()
-                    Text(formatDate(attendance.startDate)).foregroundColor(.secondary)
+                    if let user = attendance.user {
+                        Text(user.fullName)
+                            .font(.caption)
+                    }
                 }
             }
         }

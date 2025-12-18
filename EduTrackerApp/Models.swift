@@ -31,16 +31,18 @@ struct Course: Identifiable, Codable {
 }
 
 struct Attendance: Identifiable, Codable {
-    let id: Int
+    var id: String { "\(userId)-\(courseId)" }
     let userId: Int
     let courseId: Int
     let startDate: String
+    let user: User?
+    let course: Course?
     
     enum CodingKeys: String, CodingKey {
-        case id
         case userId = "user_id"
         case courseId = "course_id"
         case startDate = "start_date"
+        case user, course
     }
 }
 
