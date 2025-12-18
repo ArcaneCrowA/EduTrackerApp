@@ -8,14 +8,42 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var apiService: APIService
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if apiService.token == nil {
+            LoginView()
+        } else {
+            NavigationSplitView {
+                List {
+                    NavigationLink(destination: ProfileView()) {
+                        Label("Profile", systemImage: "person.circle")
+                    }
+                    if apiService.currentUser?.isAdmin == true {
+                        NavigationLink(destination: AdminDashboard()) {
+                            Label("Admin Dashboard", systemImage: "shield.fill")
+                        }
+                    } else {
+                        NavigationLink(destination: StudentDashboard()) {
+                            Label("Student Dashboard", systemImage: "graduationcap.fill")
+                        }
+                    }
+                }
+                .navigationTitle("EduTracker")
+            } detail: {
+                NavigationStack {
+                    if let user = apiService.currentUser {
+                        if user.isAdmin {
+                            AdminDashboard()
+                        } else {
+                            StudentDashboard()
+                        }
+                    } else {
+                        ProgressView("Loading...")
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
 

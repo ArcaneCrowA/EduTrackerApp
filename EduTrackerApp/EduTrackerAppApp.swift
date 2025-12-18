@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct EduTrackerAppApp: App {
+    @StateObject private var apiService = APIService.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(apiService)
         }
     }
 }
