@@ -30,10 +30,12 @@ struct StudentDashboard: View {
                         Text(course.description).font(.subheadline).foregroundColor(.secondary)
                     }
                     Spacer()
-                    Button("Attend") {
-                        markAttendance(course: course)
+                    let isJoined = attendances.contains(where: { $0.courseId == course.id })
+                    Button(isJoined ? "Joined" : "Join") {
+                        joinCourse(course: course)
                     }
                     .buttonStyle(.bordered)
+                    .disabled(isJoined)
                 }
             }
         }
@@ -77,7 +79,7 @@ struct StudentDashboard: View {
         }
     }
     
-    func markAttendance(course: Course) {
+    func joinCourse(course: Course) {
         guard let user = apiService.currentUser else { return }
         let formatter = ISO8601DateFormatter()
         let request = MarkAttendanceRequest(userId: user.id, courseId: course.id, startDate: formatter.string(from: Date()))
@@ -85,7 +87,7 @@ struct StudentDashboard: View {
             do {
                 let _: EmptyResponse = try await apiService.request("/attendances/mark", method: "POST", body: request)
                 fetchData()
-            } catch { print("Error marking attendance: \(error)") }
+            } catch { print("Error joining course: \(error)") }
         }
     }
     
