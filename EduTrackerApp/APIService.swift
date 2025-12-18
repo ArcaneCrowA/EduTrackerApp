@@ -1,4 +1,6 @@
 import Foundation
+import SwiftUI
+import Combine
 
 class APIService: ObservableObject {
     static let shared = APIService()
