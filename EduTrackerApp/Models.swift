@@ -8,7 +8,7 @@ struct User: Identifiable, Codable {
     let isAdmin: Bool
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id = "ID"
         case fullName = "full_name"
         case year
         case login
@@ -24,7 +24,8 @@ struct Course: Identifiable, Codable {
     let endDate: String
     
     enum CodingKeys: String, CodingKey {
-        case id, title, description
+        case id = "ID"
+        case title, description
         case startDate = "start_date"
         case endDate = "end_date"
     }
